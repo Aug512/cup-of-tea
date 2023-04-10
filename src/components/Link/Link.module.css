@@ -1,0 +1,19 @@
+.link {
+    box-sizing: border-box;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    transition: color .2s ease-out;
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.link:hover {
+    color: rgba(255, 255, 255, .8);
+}
+
+.link:active,
+.link:focus {
+    color: rgba(255, 255, 255, .6);
+}

@@ -8,8 +8,7 @@ import { Navbar } from 'components/Navbar';
 
 export const CurrentPage = (): React.ReactElement => {
     return (
-        // <div className={styles.pageContainer}>
-        <div>
+        <>
             <Navbar />
             <Switch>
                 <Route path="/themes">
@@ -29,6 +28,6 @@ export const CurrentPage = (): React.ReactElement => {
                     <ThemesPage />
                 </Route>
             </Switch>
-        </div>
+        </>
     )
 }

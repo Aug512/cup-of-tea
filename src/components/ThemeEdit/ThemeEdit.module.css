@@ -1,0 +1,91 @@
+.container {
+    color: #fff;
+}
+
+.title {
+    font-size: 40px;
+    margin: 20px 0;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: 7fr 3fr;
+    grid-template-rows: 1fr;
+    gap: 40px;
+}
+
+.label {
+    display: block;
+}
+
+.textAreaTitle {
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 24px;
+    margin: 0 0 20px;
+}
+
+.textArea {
+    width: 100%;
+    min-height: 900px;
+}
+
+.floatingBlock {
+    position: sticky;
+    top: 0;
+    padding-top: 44px;
+    height: min-content;
+}
+
+.trackTitle {
+    margin: 0 0 15px;
+}
+
+.trackPlayer {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.trackButtons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.nativeTrackUploadBtn {
+    display: none;
+}
+
+.trackDownloadBtn,
+.trackDeleteBtn {
+    flex: 1 0 auto;
+}
+
+.trackUploadBtn {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.readyState {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.readyDescription {
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .5);
+    transition: color .1s ease-in;
+}
+
+.readyDescription.checked {
+    color: #fff;
+}
+
+.submitBtn {
+    width: 100%;
+}

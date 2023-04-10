@@ -1,0 +1,24 @@
+.teamsTitle {
+    font-size: 22px;
+    color: rgba(255, 255, 255, .8);
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.teamsList {
+    margin-left: 15px;
+}
+
+.team {
+    color: rgba(255, 255, 255, .6);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.team.highlighted {
+    color: #fff;
+}
+
+.team:last-of-type {
+    margin-bottom: 0;
+}

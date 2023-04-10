@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -28,6 +29,7 @@ export const useStorage = () => {
     const getTrackUrl = useCallback(async (themeId: TThemeId, trackName: string) => {
         try {
             const pathReference = ref(storage, `tracks/${themeId}/${trackName}`);
+            debugger;
             const url = await getDownloadURL(pathReference);
             return url;
         } catch (error) {
@@ -56,6 +58,8 @@ export const useStorage = () => {
             const { id, teams } = theme;
             const trackName = teams[teamIdx].track;
             const trackPath = `tracks/${id}/${trackName}`;
+
+            debugger;
             const storageRef = ref(storage, trackPath);
 
             const snapshot = await uploadBytes(storageRef, file)

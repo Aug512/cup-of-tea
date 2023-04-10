@@ -1,0 +1,20 @@
+.container {
+    color: #fff;
+}
+
+.themeName {
+    font-size: 40px;
+}
+
+.teamsContainer {
+    margin-bottom: 20px;
+}
+
+.beatContainer {
+    display: flex;
+    align-items: center;
+}
+
+.player {
+    margin-right: 20px;
+}

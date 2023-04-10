@@ -35,7 +35,8 @@ export const useDatabase = () => {
             const snapshot = await get(child(databaseRef, 'themes/'))
 
             if (snapshot.exists()) {
-                const list = snapshot.val();
+                const listRaw = snapshot.val();
+                const list = listRaw.reverse();
                 themesListSuccess(list);
             } else {
                 themesListError({ code: 404, message: 'Not found' });
@@ -128,8 +129,11 @@ export const useDatabase = () => {
             const selectedThemeDbRef = ref(database, `themes/${themeIndex}`);
 
             if (typeof teamIdx !== 'undefined') {
-                const trackName = getTrackName(theme, teamIdx ?? 0);
-                updatedThemeData.teams[teamIdx].track = trackName;
+                const updatedTeams = theme.teams.map((team, idx) => {
+                    const track = getTrackName(theme, idx)
+                    return { ...team, track };
+                });
+                updatedThemeData.teams = updatedTeams;
             }
 
             await update(selectedThemeDbRef, updatedThemeData);
@@ -144,6 +148,8 @@ export const useDatabase = () => {
             const selectedThemeDbRef = ref(database, 'users/');
 
             const snapshot = await get(selectedThemeDbRef);
+
+            debugger;
 
             if (snapshot.exists()) {
                 const users: TUsers = snapshot.val();

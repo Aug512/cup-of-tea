@@ -15,3 +15,7 @@ body::before {
     background: linear-gradient(120deg, rgb(45, 45, 65), rgb(10, 10, 10));
     z-index: -1;
 }
+
+#root {
+    min-height: 100vh;
+}

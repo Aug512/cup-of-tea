@@ -8,9 +8,14 @@ import { useStorage } from 'hooks/storage/useStorage';
 
 import { themeSelector } from 'store/selectors/themesSelector';
 
+import { ContentWrapper } from 'components/ContentWrapper';
+import { Button } from 'components/Button';
+import { TeamsList } from 'components/TeamsList';
 import { ThemeEdit } from 'components/ThemeEdit';
 
 import { TThemeId } from 'types/common';
+
+import styles from './ThemePage.module.css';
 
 export const ThemePage = () => {
     const { themeId } = useParams<{ themeId: TThemeId }>();
@@ -40,13 +45,21 @@ export const ThemePage = () => {
         }
     }, [getTracksList, isCurrent, theme, updateMyTeamIdx]);
 
+    const handleTrackDownload = useCallback((trackUrl: string) => {
+        window.open(trackUrl, '_blank');
+    }, []);
+
     return (
-        <div>
-            <h3>Theme page</h3>
-            <h2>{name}</h2>
-            <div>{JSON.stringify(theme)}</div>
-            {beat && <><audio controls src={beat}></audio><a href={beat}>Download</a></>}
-            {!isCurrent && (
+        <ContentWrapper className={styles.container}>
+            <h2 className={styles.themeName}>Тема: {name}</h2>
+            <TeamsList className={styles.teamsContainer} teams={teams} myTeamIdx={myTeamId} />
+            {beat && (
+                <div className={styles.beatContainer}>
+                    <audio className={styles.player} controls src={beat}></audio>
+                    <Button view="secondary" onClick={() => handleTrackDownload(beat)}>Скачать</Button>
+                </div>
+            )}
+            {/* {!isCurrent && (
                 <div>
                     <h4>Команды:</h4>
                     {teams.map((team, idx) => (
@@ -56,14 +69,10 @@ export const ThemePage = () => {
                         </div>
                     ))}
                 </div>
-            )}
+            )} */}
             {isCurrent && myTeamId !== undefined && (
-                <div>
-                    <h4>Моя команда:</h4>
-                    <p>{teams[myTeamId].users.join(', ')}</p>
-                    <ThemeEdit teamId={myTeamId} />
-                </div>
+                <ThemeEdit className={styles.themeEdit} teamId={myTeamId} />
             )}
-        </div>
+        </ContentWrapper>
     );
 };

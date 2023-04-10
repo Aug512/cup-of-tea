@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    position: relative;
+}
+
+.container:after {
+    content: '';
+    bottom: 0;
+    left: -3000px;
+    width: 10000px;
+    height: 2px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, .15);
+}
+
+.links {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.userData {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, .7);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.greetings {
+    margin-right: 20px;
+}
+
+.signOutBtn {
+    padding: 8px 15px;
+}

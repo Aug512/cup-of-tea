@@ -6,8 +6,7 @@ import { RegisterPage } from 'pages/RegisterPage';
 
 export const EnterPage = (): React.ReactElement => {
     return (
-        // <div className={styles.pageContainer}>
-        <div>
+        <>
             <Switch>
                 <Route path="/login">
                     <LoginPage />
@@ -20,6 +19,6 @@ export const EnterPage = (): React.ReactElement => {
                     <LoginPage />
                 </Route>
             </Switch>
-        </div>
+        </>
     )
 }
