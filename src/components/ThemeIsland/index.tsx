@@ -32,7 +32,7 @@ export const ThemeIsland: React.FC<IThemeIslandProps> = (props) => {
                 <h3 className={styles.title}>{name}</h3>
                 <p className={styles.status}>{isCurrent ? 'Текущая' : 'Закрытая'}</p>
             </div>
-            <TeamsList teams={teams} />
+            <TeamsList teams={teams} isCurrent={false}/>
         </div>
     );
 }

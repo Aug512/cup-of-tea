@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "themes": {
+        ".read": "auth !== null",
+      	".write": "auth !== null"
+    },
+    "users": {
+        ".read": "true",
+      	".write": "true"
+    }
+  }
+}
