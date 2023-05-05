@@ -15,11 +15,6 @@ export const themesReducer = (state: IThemesState = initialState, action: Themes
                 ...state,
                 list: payload.list as IThemeData[]
             }
-        case ThemesActionType.ThemesListError:
-            return {
-                ...state,
-                error: payload.error
-            }
 
         default:
             return state;

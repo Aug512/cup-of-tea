@@ -6,10 +6,15 @@ export enum UserRole {
 }
 
 export interface IThemeData {
-    beat: string;
+    hasBeat: boolean;
+    beat: string | boolean;
     id: TThemeId;
     isCurrent: boolean;
     name: string;
+    teams: Pick<IThemeTeam, 'users' | 'isReady' >[];
+}
+
+export interface IFullThemeData extends Omit<IThemeData, 'teams'> {
     teams: IThemeTeam[];
 }
 
@@ -29,7 +34,7 @@ export type TUsers = Record<string, IUser>;
 
 export interface IThemeTeam {
     text: string;
-    track: string;
+    track: string | boolean;
     isReady: boolean;
     users: string[];
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 interface setCookieProps {
     name: string;
     value: string;
@@ -13,8 +14,12 @@ export const useCookies = () => {
         options = {
             ...options
         };
+
+        debugger;
       
-        if (!(options.expires instanceof Date)) {
+        if (typeof options.expires === 'number') {
+            options.expires = new Date(options.expires);
+        } else if (!(options.expires instanceof Date)) {
             options.expires = undefined;
         }
       

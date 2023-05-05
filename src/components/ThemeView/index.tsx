@@ -26,8 +26,8 @@ export const ThemeView: React.FC<IThemeViewProps> = ({ teamId, className }) => {
     const { theme } = useSelector(themeSelector);
 
     const teamData = theme.teams[teamId];
-    const { text, track } = teamData;
-    const trackName = getTrackName(theme, teamId);
+    // const { text, track } = teamData;
+    const trackName = getTrackName(theme.name, teamData);
 
     const handleDownloadTrack = useCallback((trackUrl: string) => {
         window.open(trackUrl, '_blank');
@@ -36,18 +36,18 @@ export const ThemeView: React.FC<IThemeViewProps> = ({ teamId, className }) => {
 
     return (
         <div className={cn(styles.container, className)}>
-            <h2 className={styles.title}>{trackName.replace('.mp3', '')}:</h2>
+            <h2 className={styles.title}>{trackName}:</h2>
             <div className={styles.audioContainer}>
-                <audio className={styles.trackPlayer} controls src={track}></audio>
-                <Button
+                {/* <audio className={styles.trackPlayer} controls src={track}></audio> */}
+                {/* <Button
                     className={styles.trackDownloadBtn}
                     view="primary"
                     onClick={() => handleDownloadTrack(track)}
                 >
                     Скачать
-                </Button>
+                </Button> */}
             </div>
-            <div className={styles.textField}>{text}</div>
+            {/* <div className={styles.textField}>{text}</div> */}
         </div>
     )
 }

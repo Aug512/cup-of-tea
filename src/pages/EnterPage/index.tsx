@@ -14,10 +14,10 @@ export const EnterPage = (): React.ReactElement => {
                 <Route path="/register">
                     <RegisterPage />
                 </Route>
-                <Route path="*">
+                {/* <Route path="*">
                     <Redirect to="/login" />
                     <LoginPage />
-                </Route>
+                </Route> */}
             </Switch>
         </>
     )

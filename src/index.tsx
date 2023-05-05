@@ -39,11 +39,11 @@ const firebaseServices = {
 export const FirebaseContext = createContext(firebaseServices);
 
 root.render(
-    <React.StrictMode>
+    // <React.StrictMode>
         <FirebaseContext.Provider value={firebaseServices}>
             <Provider store={store}>
                 <App />
             </Provider>
         </FirebaseContext.Provider>
-    </React.StrictMode>
+    // </React.StrictMode>
 );

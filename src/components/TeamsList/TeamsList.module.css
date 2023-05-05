@@ -13,6 +13,9 @@
     color: rgba(255, 255, 255, .6);
     font-size: 18px;
     margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
     transition: color .1s ease-in;
 }
 
@@ -30,4 +33,18 @@
 
 .team:last-of-type {
     margin-bottom: 0;
+}
+
+.teamItem {
+    display: inline-block;
+}
+
+.ready {
+    background-color: rgba(255, 255, 255, .9);
+    color: rgba(0, 0, 0, .7);
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: 15px;
+    line-height: 15px;
+    font-weight: 500;
 }

@@ -5,8 +5,8 @@ export const useMountEffect = (effect: EffectCallback) => {
 
     useEffect(() => {
         if (!emitted.current) {
-            effect();
             emitted.current = true
+            effect();
         }
     }, []);
 }

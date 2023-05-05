@@ -16,10 +16,19 @@
     background-color: rgba(0, 0, 0, .15);
 }
 
+.linksBlock {
+    display: flex;
+}
+
 .links {
     font-size: 20px;
     display: flex;
     align-items: center;
+    margin-right: 15px;
+}
+
+.links:last-of-type {
+    margin-right: 0;
 }
 
 .userData {

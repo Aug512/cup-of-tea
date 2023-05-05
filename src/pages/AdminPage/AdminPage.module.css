@@ -1,0 +1,21 @@
+.title {
+    font-size: 40px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+/* .subtitle {
+    fontt-size: 18px;
+    color: rgba(255, 255, 255, .7);
+    margin-bottom: 30px;
+} */
+
+.themesList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.theme {
+    margin-bottom: 10px;
+}

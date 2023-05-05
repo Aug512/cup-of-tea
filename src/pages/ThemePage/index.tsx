@@ -11,7 +11,7 @@ import { themeSelector } from 'store/selectors/themesSelector';
 import { ContentWrapper } from 'components/ContentWrapper';
 import { Button } from 'components/Button';
 import { TeamsList } from 'components/TeamsList';
-import { ThemeEdit } from 'components/ThemeEdit';
+// import { ThemeEdit } from 'components/ThemeEdit';
 
 import { TThemeId } from 'types/common';
 
@@ -20,18 +20,18 @@ import { ThemeView } from 'components/ThemeView';
 
 export const ThemePage = () => {
     const { themeId } = useParams<{ themeId: TThemeId }>();
-    const { getThemeData, getMyTeamIdx } = useDatabase();
-    const { getTracksList } = useStorage();
+    const { getThemeData } = useDatabase();
+    // const { getTracksList } = useStorage();
     const { theme } = useSelector(themeSelector);
     const [myTeamId, setMyTeamId] = useState<number | undefined>(undefined);
     const [viewedTeamId, setViewedTeamId] = useState<number | undefined>(undefined);
     const isLinksLoadedRef = useRef(false);
-    const { name, beat, isCurrent, teams } = theme;
+    const { name, hasBeat, beat, isCurrent, teams } = theme;
 
-    const updateMyTeamIdx = useCallback(async () => {
-        const myTeamIdx = await getMyTeamIdx();
-        setMyTeamId(myTeamIdx);
-    }, [getMyTeamIdx]);
+    // const updateMyTeamIdx = useCallback(async () => {
+    //     const myTeamIdx = await getMyTeamIdx();
+    //     setMyTeamId(myTeamIdx);
+    // }, [getMyTeamIdx]);
 
     const handleTeamClick = useCallback((teamId: number) => {
         viewedTeamId === teamId ? setViewedTeamId(undefined) : setViewedTeamId(teamId);
@@ -41,14 +41,14 @@ export const ThemePage = () => {
         getThemeData(themeId);
     });
 
-    useEffect(() => {
-        if (isCurrent) {
-            updateMyTeamIdx();
-        } else if (!isLinksLoadedRef.current){
-            getTracksList(theme);
-            isLinksLoadedRef.current = true;
-        }
-    }, [getTracksList, isCurrent, theme, updateMyTeamIdx]);
+    // useEffect(() => {
+    //     if (isCurrent) {
+    //         updateMyTeamIdx();
+    //     } else if (!isLinksLoadedRef.current){
+    //         // getTracksList(theme);
+    //         isLinksLoadedRef.current = true;
+    //     }
+    // }, [getTracksList, isCurrent, theme, updateMyTeamIdx]);
 
     const handleTrackDownload = useCallback((trackUrl: string) => {
         window.open(trackUrl, '_blank');
@@ -58,7 +58,9 @@ export const ThemePage = () => {
         <ContentWrapper className={styles.container}>
             <h2 className={styles.themeName}>Тема: {name}</h2>
             <TeamsList className={styles.teamsContainer} teams={teams} myTeamIdx={myTeamId} isCurrent={isCurrent} onTeamClick={handleTeamClick} />
-            {beat && (
+            {typeof beat === 'boolean' ? (
+                <h3 className={styles.beatName}>{beat ? 'Бит должен быть, но ещё не загружен' : 'В этот раз без бита'}</h3>
+            ) : (
                 <>
                     <h3 className={styles.beatName}>Минус</h3>
                     <div className={styles.beatContainer}>
@@ -67,9 +69,9 @@ export const ThemePage = () => {
                     </div>
                 </>
             )}
-            {isCurrent && myTeamId !== undefined && (
+            {/* {isCurrent && myTeamId !== undefined && (
                 <ThemeEdit className={styles.themeEdit} teamId={myTeamId} />
-            )}
+            )} */}
             {!isCurrent && viewedTeamId !== undefined && (
                 <ThemeView className={styles.themeView} teamId={viewedTeamId} />
             )}

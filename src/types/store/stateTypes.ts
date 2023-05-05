@@ -1,21 +1,19 @@
-import { IFirebaseError, IThemeData, TUsers } from 'types/common';
+import { IFullThemeData, IThemeData, TUsers } from 'types/common';
 
 export interface IAuthState {
     user: {
         uid: string;
         name: string;
-    }
-    error?: IFirebaseError;
+        isAdmin?: true | never;
+    };
 }
 
 export interface IThemesState {
     list: IThemeData[];
-    error?: IFirebaseError;
 }
 
 export interface IThemeState {
-    theme: IThemeData;
-    error?: IFirebaseError;
+    theme: IFullThemeData;
 }
 
 export interface IUsersState extends TUsers {}

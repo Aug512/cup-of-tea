@@ -7,70 +7,109 @@ import { useFirebase } from 'hooks/common/useFirebase';
 import { useStorage } from 'hooks/storage/useStorage';
 import { useActions } from 'hooks/common/useActions';
 
-import { IFirebaseError, IThemeData, TThemeId, TUsers, UserRole } from 'types/common';
+import { IFirebaseError, IFullThemeData, IThemeData, TThemeId, TUsers, UserRole } from 'types/common';
 
-import { themeSelector } from 'store/selectors/themesSelector';
+import { themeSelector, themesSelector } from 'store/selectors/themesSelector';
 import { authSelector } from 'store/selectors/authSelector';
 
-import { getTrackName } from 'lib';
+import { getMyTeamIdx, getThemeRealIndex, getTrackName, isThemeParticipant } from 'lib';
+import { useHistory } from 'react-router';
 
 export const useDatabase = () => {
     const { database } = useFirebase();
     const { getBeat, getTrackUrl } = useStorage();
     const { theme } = useSelector(themeSelector);
+    const { list: themesList } = useSelector(themesSelector);
     const { user } = useSelector(authSelector);
+    const history = useHistory();
     const {
         themesListSuccess,
-        themesListError,
+        throwError,
         themeRequestSuccess,
-        themeRequestError,
     } = useActions();
 
     const databaseRef = ref(database);
-
-    const getThemeRealIndex = useCallback((themeId: TThemeId) => Number(themeId.match(/\d/)?.[0] ?? 1) - 1, []);
 
     const getThemesList = useCallback(async () => {
         try {
             const snapshot = await get(child(databaseRef, 'themes/'))
 
             if (snapshot.exists()) {
-                const listRaw = snapshot.val();
-                const list = listRaw.reverse();
+                const listRaw = snapshot.val() as IFullThemeData[];
+                const list = listRaw.reduceRight<IThemeData[]>((acc, theme) => {
+                    const formatted = {
+                        ...theme,
+                        teams: theme.teams.map(team => ({ users: team.users , isReady: team.isReady })),
+                    }
+
+                    acc.push(formatted);
+                    return acc;
+                }, []);
                 themesListSuccess(list);
             } else {
-                themesListError({ code: 404, message: 'Not found' });
+                throwError('Темы не нашлись, что-то пошло не так...');
             }
         } catch (error) {
-            themesListError(error as IFirebaseError);
+            throwError('Темы не нашлись, что-то пошло не так...');
         }
-    }, [databaseRef, themesListError, themesListSuccess]);
+    }, [databaseRef, themesListSuccess, throwError]);
 
     const getThemeData = useCallback(async (themeId: TThemeId) => {
         try {
-            const themeIndex = getThemeRealIndex(themeId);
-            const snapshot = await get(child(databaseRef, `themes/${themeIndex}`));
+            const themeIdx = getThemeRealIndex(themeId);
+            const isAvaliable = isThemeParticipant({ themesList, themeIdx, userName: user.name });
+
+            if (!isAvaliable) {
+                throwError('Тебе сюда нельзя, жди пока откроют для всех');
+                history.push('/themes');
+                return;
+            }
+
+            const snapshot = await get(child(databaseRef, `themes/${themeIdx}`));
 
             if (snapshot.exists()) {
+                const theme = snapshot.val() as IFullThemeData;
                 const beatUrl = await getBeat(themeId);
+                theme.beat = beatUrl ?? theme.beat;
 
-                const theme = snapshot.val() as IThemeData;
-                theme.beat = beatUrl ?? '';
-                Promise.all(theme.teams.map(async (team) => {
-                    const trackUrl = await getTrackUrl(themeId, team.track) ?? team.track;
-                    team.track = trackUrl;
-                    return team;
-                })).then(teamsWithTracksUrls => {
-                    theme.teams = teamsWithTracksUrls;
-                    themeRequestSuccess(theme);
-                })
+                if (theme.isCurrent) {
+                    const myTeamIdx = getMyTeamIdx(theme, user.name);
+                    const myTeamData = theme.teams[myTeamIdx];
+                    const trackUrl = await getTrackUrl(themeId, myTeamData)
+
+                    if (trackUrl) {
+                        myTeamData.track = trackUrl;
+                    }
+
+                    const formattedTheme = {
+                        ...theme,
+                        teams: [myTeamData],
+                    }
+
+                    themeRequestSuccess(formattedTheme);
+                }
+                // Promise.all(theme.teams.map(async (team) => {
+                //     const trackUrl = await getTrackUrl(themeId, team.track) ?? team.track;
+                //     team.track = trackUrl;
+                //     return team;
+                // })).then(teamsWithTracksUrls => {
+                //     theme.teams = teamsWithTracksUrls;
+                //     themeRequestSuccess(theme);
+                // })
             } else {
-                themeRequestError({ code: 404, message: 'Not found' });
+                throwError('Тема не нашлась, что-то пошло не так...');
             }
         } catch (error) {
-            themeRequestError(error as IFirebaseError);
+            debugger;
+            const { code } = error as IFirebaseError;
+            if (code === 'auth/not-authorize') {
+                throwError('Тема не нашлась, что-то пошло не так...');
+                return;
+            }
+
+            throwError('Тема не нашлась, что-то пошло не так...');
         }
-    }, [databaseRef, getBeat, getThemeRealIndex, getTrackUrl, themeRequestError, themeRequestSuccess]);
+    }, [databaseRef, getBeat, getTrackUrl, history, themeRequestSuccess, themesList, throwError, user.name]);
 
     const getUsersList = useCallback(async () => {
         try {
@@ -114,23 +153,23 @@ export const useDatabase = () => {
         } catch (error) { /* empty */ }
     }, [databaseRef]);
 
-    const getMyTeamIdx = useCallback(async () => {
-        try {
-            const myLogin = user.name ?? await getUserLogin(user.uid);
-            const myTeamIdx = theme.teams.findIndex(team => Boolean(team.users.find(login => login === myLogin)));
+    // const getMyTeamIdx = useCallback(async () => {
+    //     try {
+    //         const myLogin = user.name ?? await getUserLogin(user.uid);
+    //         const myTeamIdx = theme.teams.findIndex(team => Boolean(team.users.find(login => login === myLogin)));
 
-            return myTeamIdx;
-        } catch (error) { /* empty */}
-    }, [getUserLogin, theme.teams, user]);
+    //         return myTeamIdx;
+    //     } catch (error) { /* empty */}
+    // }, [getUserLogin, theme.teams, user]);
 
-    const updateThemeData = useCallback(async (themeId: TThemeId, updatedThemeData: IThemeData, teamIdx?: number) => {
+    const updateThemeData = useCallback(async (themeId: TThemeId, updatedThemeData: IFullThemeData, teamIdx?: number) => {
         try {
             const themeIndex = getThemeRealIndex(themeId);
             const selectedThemeDbRef = ref(database, `themes/${themeIndex}`);
 
             if (typeof teamIdx !== 'undefined') {
-                const updatedTeams = theme.teams.map((team, idx) => {
-                    const track = getTrackName(theme, idx)
+                const updatedTeams = theme.teams.map(team => {
+                    const track = getTrackName(theme.name, team)
                     return { ...team, track };
                 });
                 updatedThemeData.teams = updatedTeams;
@@ -140,7 +179,7 @@ export const useDatabase = () => {
             return true;
         } catch (error) { /* empty */ }
 
-    }, [database, getThemeRealIndex, theme]);
+    }, [database, theme]);
 
     const updateUsersList = useCallback(async ({ name, uid }: { name: string; uid: string }) => {
         try {

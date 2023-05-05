@@ -33,7 +33,8 @@ export const TeamsList: React.FC<ITeamsListProps> = (props) => {
                         className={cn(styles.team, { [styles.highlighted]: myTeamIdx !== undefined && idx === myTeamIdx, [styles.interactive]: !isCurrent })}
                         onClick={() => handleTeamClick(idx)}
                     >
-                        Команда {idx + 1}: {team.users.join(', ')}
+                        <span className={styles.teamItem}>Команда {idx + 1}: {team.users.join(', ')}</span>
+                        {team.isReady && <div className={styles.ready}>Готовы</div>}
                     </div>
                 ))}
             </div>

@@ -15,7 +15,7 @@ export const LoginPage: React.FC = () => {
     const { requestLogin } = useAuth();
     const history = useHistory();
 
-    useMountEffect(() => history.push('/login'));
+    // useMountEffect(() => history.push('/login'));
 
     const handleSubmit = (evt: FormEvent) => {
         evt.preventDefault();
